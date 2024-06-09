@@ -1,13 +1,33 @@
-import { Hono } from 'hono'
+import { Hono } from "hono";
+import { zValidator } from "@hono/zod-validator";
+import { z } from "zod";
 
 type Bindings = {
-  [key in keyof CloudflareBindings]: CloudflareBindings[key]
-}
+  [key in keyof CloudflareBindings]: CloudflareBindings[key];
+};
 
-const app = new Hono<{ Bindings: Bindings }>()
+const app = new Hono<{ Bindings: Bindings }>();
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
+app.get(
+  "/",
+  zValidator("query", z.object({ prompt: z.string() })),
+  async (c) => {
+    const { prompt } = c.req.valid("query");
+    const inputs = {
+      prompt,
+    };
 
-export default app
+    const response = await c.env.AI.run(
+      "@cf/bytedance/stable-diffusion-xl-lightning",
+      inputs
+    );
+
+    return new Response(response, {
+      headers: {
+        "content-type": "image/png",
+      },
+    });
+  }
+);
+
+export default app;
