@@ -4,4 +4,5 @@ interface CloudflareBindings {
   AI: Ai;
   PINECONE_API_KEY: string;
   PINECONE_INDEX_HOST: string;
+  PINECONE_INDEX_NAMESPACE: string;
 }

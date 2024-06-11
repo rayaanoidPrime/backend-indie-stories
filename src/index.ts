@@ -36,7 +36,6 @@ app.get(
   zValidator("query", z.object({ prompt: z.string() })),
   async (c) => {
     const { prompt } = c.req.valid("query");
-    console.log("ffffffffffffffffffffffffffffffcc");
 
     const embeddings = await c.env.AI.run("@cf/baai/bge-base-en-v1.5", {
       text: prompt,
@@ -45,7 +44,7 @@ app.get(
     const vector = embeddings.data[0];
 
     const requestBody = {
-      namespace: "mahabharat-md",
+      namespace: c.env.PINECONE_INDEX_NAMESPACE,
       vector: vector,
       topK: 3,
       includeMetadata: true,
