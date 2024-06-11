@@ -2,4 +2,6 @@
 // After adding bindings to `wrangler.toml`, regenerate this interface via `npm run cf-typegen`
 interface CloudflareBindings {
   AI: Ai;
+  PINECONE_API_KEY: string;
+  PINECONE_INDEX_HOST: string;
 }
